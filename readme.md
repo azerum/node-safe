@@ -1,3 +1,21 @@
+This fork adds `custom` option to .node-safe.json that allow you to put arbitrary Scheme configuration. Use like this:
+
+```json
+{
+  "$schema": "https://repo.node-safe.com/schema/node-safe.schema.json",
+  "$readme": "https://github.com/berstend/node-safe#readme",
+
+  "node": {
+    "custom": [
+      "(allow process-exec (with no-sandbox) (literal \"/bin/ps\")",
+      "(allow file-read*)"
+    ]
+   }
+}
+```
+
+Different S-expressions in array will be joined by space and put into configuration as they are
+
 # node-safe 🤠
 
 <!-- ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/berstend/puppeteer-extra/Test/master) -->
