@@ -3,7 +3,8 @@
   "$readme": "https://github.com/berstend/node-safe#readme",
 
   "node": {
-    "allow-read": "./data/**"
+    "allow-read": "./data/**",
+    "custom": ["a", "b"]
   },
 
   "scripts": {

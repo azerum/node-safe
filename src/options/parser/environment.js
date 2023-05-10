@@ -32,6 +32,7 @@ function parse() {
       )
       .filter(([name, value]) => value !== undefined),
   )
+
   return { options }
 }
 exports.parse = parse

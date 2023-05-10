@@ -18,6 +18,7 @@ const optionConfig = [
   ["sandbox-target", { type: "BooleanOrString" }],
   ["sandbox-help", { type: "Boolean" }],
   ["sandbox-version", { type: "Boolean" }],
+  ["custom", { type: "String", list: true }]
 ].map(([name, config]) => {
   config.cliName = "--" + name
   config.envName = "NODE_SAFE_" + name.toUpperCase().replace(/-/g, "_")

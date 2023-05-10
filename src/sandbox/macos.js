@@ -347,6 +347,17 @@ const allowNetOutbound = (shouldEnable) => {
   `
 }
 
+const addCustom = (customExpressions) => {
+  if (!customExpressions) {
+    return ""
+  }
+
+  return `
+; custom expressions
+${customExpressions.join('\n')}
+; custom expressions end`
+}
+
 function globsToSandboxStatement(globs = []) {
   return globs.map((g) => {
     const containsGlob = g.includes("*")
@@ -372,10 +383,13 @@ function generateProfile(ctx) {
   profile += allowNet(ctx.options["allow-net"])
   profile += allowNetInbound(ctx.options["allow-net-inbound"])
   profile += allowNetOutbound(ctx.options["allow-net-outbound"])
+  
   if (ctx.packageManager?.entitlements?.includes("internet")) {
     profile += `; packageManager [internet]: Enable outbound requests during package manager commands`
     profile += allowNetOutbound(true)
   }
+
+  profile += addCustom(ctx.options["custom"])
 
   return profile
 }
@@ -412,6 +426,7 @@ function runSandboxed(ctx, minifiedProfile) {
 
 exports.handle = (ctx) => {
   const profile = generateProfile(ctx)
+
   debug("profile:", profile)
   const minifiedProfile = minifyProfile(profile)
   debug("minified profile:", minifiedProfile)

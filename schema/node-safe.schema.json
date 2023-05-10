@@ -88,6 +88,11 @@
         "sandbox-target": {
           "type": ["boolean"],
           "description": "Specify a different target binary to be sandboxed (by default `node`)"
+        },
+        "custom": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Custom Scheme expressions for sandbox profile file. For reference, see https://github.com/berstend/node-safe/blob/master/src/sandbox/readme.md (especially the PDF link there)"
         }
       }
     },
