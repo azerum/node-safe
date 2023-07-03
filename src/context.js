@@ -13,7 +13,7 @@ const transform = require("./options/transform")
 const { mergeOptions } = require("./options/merge")
 
 /** Acquire all the info we need to run a process sandboxed */
-exports.parseInput = () => {
+exports.parseInput = async () => {
   // Let's start with the basics
   const cwd = process.cwd()
   const nodeBinary = process.env.NODE_SAFE_VANILLA_NODE_PATH || process.execPath
@@ -33,7 +33,7 @@ exports.parseInput = () => {
   const rootDirs = files.findRoots(cwd)
   if (rootDirs.configRoot) {
     // To be able to parse the config file we had to get package manager info and config file location first
-    rawOptions.configfile = parser.configfile.parse(rootDirs.configRoot, { packageManager })
+    rawOptions.configfile = await parser.configfile.parse(rootDirs.configRoot, { packageManager })
   }
 
   // Regarding the temp dir:

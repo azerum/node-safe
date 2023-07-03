@@ -5,8 +5,8 @@ const { parseInput } = require("./context")
 const { runUnsandboxed } = require("./run")
 const macos = require("./sandbox/macos")
 
-function main() {
-  const ctx = parseInput()
+async function main() {
+  const ctx = await parseInput()
   debug("context", ctx)
 
   if (ctx.options["sandbox-version"] || ctx.options["sandbox-help"]) {
@@ -65,9 +65,9 @@ function main() {
   macos.handle(ctx)
 }
 
-function run() {
+async function run() {
   try {
-    main()
+    await main()
   } catch (err) {
     console.error(
       `

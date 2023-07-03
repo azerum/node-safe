@@ -42,7 +42,9 @@ const parseEntries = (rootObj) =>
     })
 
 /** Parse a `.node-safe.json` config file */
-function parse(configRoot, { packageManager }) {
+async function parse(configRoot, { packageManager }) {
+  const { default: stripJsonComments } = await import('strip-json-comments')
+
   const filePath = path.join(configRoot, configFileName)
   const data = fs.readFileSync(filePath).toString()
 
@@ -53,7 +55,8 @@ function parse(configRoot, { packageManager }) {
   }
   let configData = null
   try {
-    configData = JSON.parse(data)
+    const withoutComments = stripJsonComments(data, { trailingCommas: true })
+    configData = JSON.parse(withoutComments)
   } catch (err) {
     console.warn(`Warning: ${filePath} is malformed, ignoring.`)
     console.warn(err)

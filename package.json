@@ -34,5 +34,8 @@
     "yarn",
     "npm",
     "npx"
-  ]
+  ],
+  "dependencies": {
+    "strip-json-comments": "5.0.0"
+  }
 }
