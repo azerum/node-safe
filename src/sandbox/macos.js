@@ -28,6 +28,7 @@ const basics = (ctx) => {
   (regex #"(.*)/node_modules/(.*)\\.(${safeExtensions.join("|")})")
 )
   `
+  
   if (ctx.paths.nodeSafeShellDir) {
     profile += `
 ; Allow running things from our shell integration directory (necessary for when we run ourselves in a sandbox)
@@ -75,6 +76,27 @@ const basics = (ctx) => {
     `
   }
   return profile
+}
+
+// If `node` is executed without args (i.e. in REPL mode), allow it to read
+// the REPL history file
+const nodeRepl = (ctx) => {
+  if (!ctx.isRunningNode) {
+    return ""
+  }
+
+  // If there are some args passed to `node`, it's likely running not in REPL
+  // mode (are there cases when the REPL can be started with args?)
+  if (ctx.targetOptions.length) {
+    return ""
+  }
+
+  return `
+; Allow node REPL to read/write history file
+(allow file-read* file-write* 
+  (literal "${ctx.paths.home}/.node_repl_history")
+)
+`
 }
 
 // Special additions when a package manager (e.g. npm, yarn) is called
@@ -193,6 +215,11 @@ const allowRead = (globs) => {
 (allow file-read*)
     `
   }
+  
+  if (globs.length === 0) {
+    return ""
+  }
+
   return `
 ; allow-read, specific files and folders
 (allow file-read*
@@ -211,6 +238,11 @@ const allowWrite = (globs) => {
 (allow file-write*)
     `
   }
+
+  if (globs.length === 0) {
+    return ""
+  }
+
   return `
 ; allow-write, specific files and folders
 (allow file-write*
@@ -230,6 +262,11 @@ const allowReadWrite = (globs) => {
 (allow file-write*)
     `
   }
+
+  if (globs.length === 0) {
+    return ""
+  }
+
   return `
 ; allow-read-write, specific files and folders
 (allow file-read*
@@ -241,10 +278,13 @@ const allowReadWrite = (globs) => {
   `
 }
 
-const allowRun = (globs) => {
+const allowRun = (ctx, globs) => {
+  const isArray = Array.isArray(globs)
+
   if (!globs) {
     return ""
   }
+
   let defaults = `
 ; allow-run, enable specifc permissions often used by external processes
 
@@ -271,6 +311,9 @@ const allowRun = (globs) => {
   (regex #"(.*)/node_modules/yarn/bin/(.*)")
   ; Yarn uses a weird temporary shell script to call node and itself
   (regex #"/private/var/folders/(.*)/yarn--(.*)")
+
+  ; Runnable packages installed with PNPM
+  (subpath "${ctx.paths.packageRoot || ctx.paths.cwd}/node_modules/.bin")
 )
 (allow process-fork) ; needed for process-exec, has no filters
 
@@ -295,6 +338,11 @@ const allowRun = (globs) => {
 ${defaults}
     `
   }
+
+  if (globs.length === 0) {
+    return defaults
+  }
+
   return `
 ; allow-run, specific binaries
 (allow process-exec file-read*
@@ -375,11 +423,12 @@ function generateProfile(ctx) {
 `
   profile += macOSDefaults
   profile += basics(ctx)
+  profile += nodeRepl(ctx)
   profile += packageScript(ctx)
   profile += allowRead(ctx.options["allow-read"])
   profile += allowWrite(ctx.options["allow-write"])
   profile += allowReadWrite(ctx.options["allow-read-write"])
-  profile += allowRun(ctx.options["allow-run"])
+  profile += allowRun(ctx, ctx.options["allow-run"])
   profile += allowNet(ctx.options["allow-net"])
   profile += allowNetInbound(ctx.options["allow-net-inbound"])
   profile += allowNetOutbound(ctx.options["allow-net-outbound"])

@@ -42,20 +42,20 @@
       "additionalProperties": true,
       "properties": {
         "allow-read": {
-          "$ref": "#/$defs/booleanOrString",
-          "description": "Allow file system read access. You can specify an optional, comma-separated list of directories or files to provide an allow-list of allowed file system access. Wildcard globs are supported."
+          "$ref": "#/$defs/booleanOrStringOrStringList",
+          "description": "Allow file system read access. You can specify an array (or a string of comma-separated values) of directories or files to provide an allow-list of allowed file system access. Wildcard globs are supported."
         },
         "allow-write": {
-          "$ref": "#/$defs/booleanOrString",
-          "description": "Allow file system write access. You can specify an optional, comma-separated list of directories or files to provide an allow-list of allowed file system access. Wildcard globs are supported."
+          "$ref": "#/$defs/booleanOrStringOrStringList",
+          "description": "Allow file system write access. You can specify an array (or a string of comma-separated values) of directories or files to provide an allow-list of allowed file system access. Wildcard globs are supported."
         },
         "allow-read-write": {
-          "$ref": "#/$defs/booleanOrString",
-          "description": "Allow file system read & write access. You can specify an optional, comma-separated list of directories or files to provide an allow-list of allowed file system access. Wildcard globs are supported."
+          "$ref": "#/$defs/booleanOrStringOrStringList",
+          "description": "Allow file system read & write access. You can specify an array (or a string of comma-separated values) of directories or files to provide an allow-list of allowed file system access. Wildcard globs are supported."
         },
         "allow-run": {
-          "$ref": "#/$defs/booleanOrString",
-          "description": "Allow running subprocesses. You can specify an optional, comma-separated list of subprocesses to provide an allow-list of allowed subprocesses. Wildcard globs are supported. Be aware that subprocesses are subject to the same permissions as the Node.js app and file system or network access needs to be permitted for subprocesses as well."
+          "$ref": "#/$defs/booleanOrStringOrStringList",
+          "description": "Allow running subprocesses. You can specify an array (or a string of comma-separated values) of subprocesses to provide an allow-list of allowed subprocesses. Wildcard globs are supported. Be aware that subprocesses are subject to the same permissions as the Node.js app and file system or network access needs to be permitted for subprocesses as well."
         },
         "allow-net": {
           "type": ["boolean"],
@@ -90,15 +90,23 @@
           "description": "Specify a different target binary to be sandboxed (by default `node`)"
         },
         "custom": {
-          "type": "array",
-          "items": { "type": "string" },
+          "$ref": "#/$defs/stringList",
           "description": "Custom Scheme expressions for sandbox profile file. For reference, see https://github.com/berstend/node-safe/blob/master/src/sandbox/readme.md (especially the PDF link there)"
         }
       }
     },
 
-    "booleanOrString": {
-      "type": ["boolean", "string"]
+    "booleanOrStringOrStringList": {
+      "oneOf": [
+        { "type": "boolean" },
+        { "type": "string" },
+        { "$ref": "#/$defs/stringList" }
+      ]
+    },
+
+    "stringList": {
+      "type": "array",
+      "items": { "type": "string" }
     }
   }
 }

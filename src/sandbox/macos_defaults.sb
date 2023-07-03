@@ -19,6 +19,11 @@
     (subpath "/private/var/db/timezone")
     (subpath "/usr/lib")
     (subpath "/usr/share")
+
+    ; Needed for Homebrew installation. `node` references `libuv` dynamic
+    ; library. In my case it was located at 
+    ; `/usr/local/Cellar/libuv/1.45.0/lib/libuv.1.dylib`
+    (subpath "/usr/local/Cellar")
   ))
 )
 
