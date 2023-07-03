@@ -20,7 +20,7 @@ Different S-expressions in array will be joined by space and put into configurat
 
 <!-- ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/berstend/puppeteer-extra/Test/master) -->
 [![Works with node-safe](https://img.shields.io/badge/%F0%9F%A4%A0%20node--safe-enabled-brightgreen)](https://github.com/berstend/node-safe#readme)
-[![dependencies](https://img.shields.io/badge/dependencies-zero-brightgreen)](https://github.com/berstend/node-safe)
+[![dependencies](https://img.shields.io/badge/dependencies-one-green)](https://github.com/berstend/node-safe)
 [![npm](https://img.shields.io/npm/v/@berstend/node-safe.svg)](https://www.npmjs.com/package/@berstend/node-safe)
 ![license](https://img.shields.io/npm/l/@berstend/node-safe)
 
