@@ -85,3 +85,6 @@
 ; I'm not sure if we should move this into the `--allow-run` block though
 (allow signal)
 
+; New in Node.js 21
+(allow file-read*
+  (literal "/usr/local/etc/openssl@3/openssl.cnf"))
